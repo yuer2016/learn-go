@@ -2,6 +2,7 @@ package function
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -51,4 +52,27 @@ func TestVariants(t *testing.T) {
 	s := []int{1, 2, 3}
 	t.Log(variants("sum1:%d", 1, 2, 3))
 	t.Log(variants("sum2:%d", s...))
+}
+
+func deferFile() error {
+	f, err := os.Create("hello.txt")
+
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	f.WriteString("hello world!")
+	return nil
+}
+
+func closeFile() error {
+	err := os.Remove("hello.txt")
+	return err
+}
+
+func TestDeferFile(t *testing.T) {
+	deferFile()
+	closeFile()
 }
