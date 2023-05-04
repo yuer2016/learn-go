@@ -7,7 +7,7 @@ import (
 
 /*字符串是不可变字节(byte)序列,其本身是一个复合结构。*/
 func TestString(t *testing.T) {
-	s := "雨痕\x61\142\u0041"
+	s := "yuer\x61\142\u0041"
 
 	fmt.Printf("%s\n", s)
 	fmt.Printf("%x,len: %d\n", s, len(s))
