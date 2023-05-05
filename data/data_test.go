@@ -3,11 +3,18 @@ package data
 import (
 	"fmt"
 	"testing"
+	"unsafe"
 )
+
+/* 字符串是不可变字节(byte)序列，其本身是一个复合结构。*/
+type stringStruct struct {
+	str unsafe.Pointer
+	len int
+}
 
 /*字符串是不可变字节(byte)序列,其本身是一个复合结构。*/
 func TestString(t *testing.T) {
-	s := "yuer\x61\142\u0041"
+	s := "鱼儿\x61\142\u0041"
 
 	fmt.Printf("%s\n", s)
 	fmt.Printf("%x,len: %d\n", s, len(s))
@@ -26,7 +33,8 @@ func TestString(t *testing.T) {
 	println(s3, s4, s5)
 }
 
-/*定义数组类型时,数组长度必须是非负整型常量表达式,长度是类型组成部分。元素类型相同,但长度不同的数组不属于同一类型*/
+/*定义数组类型时,数组长度必须是非负整型常量表达式,长度是类型组成部分。
+元素类型相同,但长度不同的数组不属于同一类型*/
 func TestArray(t *testing.T) {
 	var a [4]int // 元素自动初始化为零
 
@@ -108,22 +116,32 @@ func TestCopyArray(t *testing.T) {
 }
 
 /*
-切片(slice) 本身并非动态数组或数组指针。它内部通过指针引用底层数组，设定相关属性将数据读写操作限定在指定区域内.
+切片(slice) 本身并非动态数组或数组指针。
+它内部通过指针引用底层数组，设定相关属性将数据读写操作限定在指定区域内.
 切片本身是个只读对象，其工作机制类似数组指针的一种包装
 */
+type slice struct {
+	array unsafe.Pointer
+	len   int // len 用于限定可读的写元素数量
+	cap   int // 属性 cap 表示切片所引用数组片段的真实长度
+}
+
 func TestSlice(t *testing.T) {
-	x := [...]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	x := [...]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	s := x[2:5]
+
+	println(cap(s), len(s))
 
 	for i := 0; i < len(s); i++ {
 		println(s[i])
 	}
 }
 
-/*可直接创建切片对象,无须预先准备数组。因为是引用类型,须使用make函数或显式初始化语句,它会自动完成底层数组内存分配*/
+/*可直接创建切片对象,无须预先准备数组。
+因为是引用类型,须使用 make 函数或显式初始化语句,它会自动完成底层数组内存分配*/
 func TestInitSlice(t *testing.T) {
 	s1 := make([]int, 3, 5)    // 指定 len、cap,底层数组初始化为零值
-	s2 := make([]int, 3)       // 省略cap,和 len 相等
+	s2 := make([]int, 3)       // 省略 cap, 和 len 相等
 	s3 := []int{10, 20, 5: 30} // 按初始化元素分配底层数组,并设置 len、cap
 
 	fmt.Println(s1, len(s1), cap(s1))
@@ -154,7 +172,8 @@ func TestMap(t *testing.T) {
 	m["a"] = 1
 	m["b"] = 2
 
-	m2 := map[int]struct { //值为匿名结构类型
+	//值为匿名结构类型
+	m2 := map[int]struct {
 		x int
 	}{
 		1: {x: 100}, //可省略 key、value 类型标签
@@ -166,12 +185,14 @@ func TestMap(t *testing.T) {
 	m["a"] = 10 //修改
 	m["c"] = 30 //新增
 
-	/*使用 ok-idiom 判断 key 是否存在,返回值.访问不存在的键值，默认返回零值，不会引发错误。但推荐使用 ok-idiom 模式，毕竟通过零值无法判断键值是否存在，或许存储的 value 本就是零*/
+	/*使用 ok-idiom 判断 key 是否存在,返回值.访问不存在的键值，默认返回零值，不会引发错误。
+	但推荐使用 ok-idiom 模式，毕竟通过零值无法判断键值是否存在，或许存储的 value 本就是零*/
 	if v, ok := m["d"]; ok {
 		println(v)
 	}
 
-	delete(m, "d") //删除键值对。不存在时，不会出错
+	//删除键值对。不存在时，不会报错
+	delete(m, "d")
 }
 
 /*字典进行迭代，每次返回的键值次序都不相同*/
