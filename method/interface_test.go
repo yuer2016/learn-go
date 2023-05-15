@@ -107,7 +107,6 @@ type _type interface{}
 * 类型转换
 * 类型推断可将接口变量还原为原始类型,或用来判断是否实现了某个更具体的接口类型
  */
-
 type dataInt int
 
 func (d dataInt) String() string {
