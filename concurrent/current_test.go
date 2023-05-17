@@ -1,7 +1,9 @@
 package concurrent
 
 import (
+	"fmt"
 	"math"
+	"os"
 	"runtime"
 	"sync"
 	"testing"
@@ -289,5 +291,92 @@ func TestChannelSelectNil(t *testing.T) {
 
 /**
 * 当所有通道都不可用时，select 会执行 default 语句。
-* 如此可避开 select 阻塞，但须注意处理外层循环，以免陷入空耗。
+* 这样可避开 select 阻塞，但须注意处理外层循环，以免陷入空耗。
  */
+func TestChannelDefaultSelect(t *testing.T) {
+	done := make(chan struct{})
+	c := make(chan int)
+
+	go func() {
+		defer close(done)
+
+		for {
+			select {
+			case x, ok := <-c:
+				if !ok {
+					return
+				}
+
+				fmt.Println("data:", x)
+			default: // 避免 select 阻塞
+			}
+
+			fmt.Println(time.Now())
+			time.Sleep(time.Second)
+		}
+	}()
+
+	time.Sleep(time.Second * 5)
+
+	c <- 100
+	close(c)
+
+	<-done
+}
+
+/**
+* 通道本身就是一个并发安全的队列，可用作 ID generator、Pool 等用途。
+ */
+func TestChannelSemaphore(t *testing.T) {
+	runtime.GOMAXPROCS(4)
+	var wg sync.WaitGroup
+
+	// 最多允许2个并发同时执行
+	sem := make(chan struct{}, 2)
+
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+
+		go func(id int) {
+			defer wg.Done()
+
+			//acquire: 获取信号
+			sem <- struct{}{}
+			//release: 释放信号
+			defer func() { <-sem }()
+
+			time.Sleep(time.Second * 2)
+			fmt.Println(id, time.Now())
+		}(i)
+	}
+
+	wg.Wait()
+}
+
+/**
+* 标准库 time 提供了 timeout 和 tick channel 实现
+ */
+func TestChannelTime(t *testing.T) {
+
+	go func() {
+		for {
+			select {
+			case <-time.After(time.Second * 5):
+				fmt.Println("timeout...")
+				os.Exit(0)
+			}
+		}
+	}()
+
+	go func() {
+		tick := time.Tick(time.Second)
+		for {
+			select {
+			case <-tick:
+				fmt.Println(time.Now())
+			}
+		}
+	}()
+
+	<-(chan struct{})(nil) // 直接用 nil channel 阻塞进程
+}
