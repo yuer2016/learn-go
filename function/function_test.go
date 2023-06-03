@@ -41,6 +41,7 @@ func paging(sql string, index int) (count, pages int, err error) {
 	return
 }
 
+// 命名返回函数
 func TestNameingRetrun(t *testing.T) {
 	count, pages, err := paging("select", 10)
 
