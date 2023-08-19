@@ -8,7 +8,6 @@ I think there are two difficulties in go language, one is network and the other 
 
 Go 是一门编译型语言，Go 语言的工具链将源代码及其依赖转换成计算机的机器指令。
 
-
 ### Go 配置
 ```bash
 export GOPATH="${HOME}/.go"
@@ -48,7 +47,7 @@ workspace
                                +--- sublib.go
 ```
 
-可在 **GOPATH** 环境变量列表中添加多个⼯作空间,但不能和 **GOROOT** 相同。 
+可在 **GOPATH** 环境变量列表中添加多个工作空间,但不能和 **GOROOT** 相同。 
 
 ```bash
 export GOPATH=$HOME/projects/golib:$HOME/projects/go
@@ -56,23 +55,23 @@ export GOPATH=$HOME/projects/golib:$HOME/projects/go
 go mod init MODULE_NAME
 ```
 
-通常 **go get** 使⽤第⼀个工作空间保存下载的第三方库。
+通常 **go get** 使用第一个工作空间保存下载的第三方库。
 
 ### 源文件 
 
 * **编码**：源码文件必须是 UTF-8 格式，否则会导致编译器出错。
 * **结束**：语句以 ";" 结束，多数时候可以省略。
-* **注释**：⽀持 "//"、"/\*\*/" 两种注释⽅式，不能嵌套。 
-* **命名**：采⽤ camelCasing ⻛格，不建议使⽤下划线。
+* **注释**：⽀持 "//"、"/\*\*/" 两种注释方式，不能嵌套。 
+* **命名**：采用 camelCasing 风格，不建议使用下划线。
 
 ### 包结构 
 
 所有代码都必须组织在 package 中。
 
 * **源文件** 头部以  package 声明包名称。
-* 包由同⼀目录下的多个源码文件组成。 
+* 包由同一目录下的多个源码文件组成。 
 * 包名类似 **namespace**，与包所在目录名、编译文件名无关。
-* 目录名最好不⽤ **main、all、std** 这三个保留名称。
+* 目录名最好不用 **main、all、std** 这三个保留名称。
 * 可执行文件必须包含 **package main**，入口函数 **main**。 
 
 说明：**os.Args** 返回命令行参数，**os.Exit** 终止进程。
@@ -87,7 +86,7 @@ go mod init MODULE_NAME
 
 ### 导入包 
 
-使⽤包成员前，必须先⽤ **import** 关键字导⼊，但不能形成导入循环。
+使用包成员前，必须先用 **import** 关键字导⼊，但不能形成导入循环。
 **import "相对目录/包主文件名"**
 相对目录是指从 **/pkg/** 开始的子目录，以标准库为例：
 
@@ -106,11 +105,11 @@ import . "yuhen/test" // 简便模式: A
 import _ "yuhen/test" // 非导⼊模式: 仅让该包执⾏初始化函数
 ```
 
-未使⽤的导入包，会被编译器视为错误 (不包括 "import \_")。 
+未使用的导入包，会被编译器视为错误 (不包括 "import \_")。 
 
 ***./main.go:4: imported and not used: "fmt"***
 
-对于当前目录下的子包，除使⽤默认完整导入路径外，还可使用 local 方式。
+对于当前目录下的子包，除使用默认完整导入路径外，还可使用 local 方式。
 
 ```go
 workspace  
@@ -161,7 +160,7 @@ Go 语言和其他编程语言一样，一个大的 **程序** 是由很多小�
 
 Go 是 **静态类型** 语言，**不能在运行期改变变量类型**。 
 使用关键字 ***var*** **定义变量**，自动初始化为 **零值**。
-如果 **提供初始化值**，可 **省略** 变量类型，由编译器 **⾃动推断** 。
+如果 **提供初始化值**，可 **省略** 变量类型，由编译器 **自动推断** 。
 
 ```go
 /*golang 定义变量的三种方式*/
@@ -175,7 +174,7 @@ func main() {
     x := 123 
 }
 
-/*可⼀次定义多个变量*/
+/*可一次定义多个变量*/
 var x, y, z int 
 var s, n = "abc", 123 
 var ( 
@@ -217,7 +216,7 @@ const (
     c bool = false
 )
 
-/*在常量组中，如不提供类型和初始化值，那么视作与上⼀常量相同*/
+/*在常量组中，如不提供类型和初始化值，那么视作与上一常量相同*/
 const ( 
     s = "abc" 
     x // x = "abc" 
@@ -229,7 +228,7 @@ func main() {
 }
 
 /*枚举: 
-关键字 iota 定义常量组中从 0 开始按行计数 的 ⾃增枚举值*/
+关键字 iota 定义常量组中从 0 开始按行计数 的 自增枚举值*/
 const ( 
     Sunday = iota // 0 
     Monday // 1
@@ -240,7 +239,7 @@ const (
     Saturday // 6 
 )
 
-/*通过⾃定义类型来实现枚举类型限制*/
+/*通过自定义类型来实现枚举类型限制*/
 type Color int 
 
 const ( 
@@ -258,7 +257,7 @@ func main() {
     x := 1 
     // Error: cannot use x (type int) as type Color in function argument 
     test(x) 
-    // 常量会被编译器⾃动转换
+    // 常量会被编译器自动转换
     test(1) 
 }
 ```
@@ -333,7 +332,7 @@ if a {
 * 默认值是空字符串 ""。 
 * 用索引号访问某字节，如 s[i]。
 * 不能用序号获取字节元素指针，&s[i] ⾮法。 
-* 不可变类型，⽆法修改字节数组。 
+* 不可变类型，无法修改字节数组。 
 * 字节数组尾部不包含 NULL。
 
 ```go
@@ -341,7 +340,7 @@ if a {
 s := "abc"
 println(s[0] == '\x61', s[1] == 'b', s[2] == 0x63)
 
-/* 连接跨行字符串时，"+" 必须在上⼀行末尾，否则导致编译错误 */
+/* 连接跨行字符串时，"+" 必须在上一行末尾，否则导致编译错误 */
 s := "Hello, " + 
 "World!"
 
@@ -441,7 +440,7 @@ func main() {
 
 **命名类型** 包括 ***bool、int、string*** 等，而 ***array、 slice、map*** 等和具体元素类型、长度等有关，属于 **未命名类型** 。
 
-**具有相同声明的未命名类型被视为同⼀类型** :
+**具有相同声明的未命名类型被视为同一类型** :
 * 具有 **相同基类型** 的 **指针**;
 * 具有 **相同元素类型** 和 **长度** 的 ***array*** ;
 * 具有 **相同元素类型** 的 ***slice***  ; 
@@ -485,9 +484,9 @@ var s2 []int = s
 /* 单位运算 */
 // AND 都为 1; 
 0110 & 1011 = 0010 
-// OR ⾄少⼀个为 1;
+// OR ⾄少一个为 1;
 0110 | 1011 = 1111 
-// XOR 只能⼀个为 1; 
+// XOR 只能一个为 1; 
 0110 ^ 1011 = 1101 
 // AND NOT 清除标志位
 0110 &^ 1011 = 0100 
@@ -529,7 +528,7 @@ x, ^x // 0001, -0010
 var a = struct{ x int }{100} 
 var b = []int{1, 2, 3}
 
-/*初始化值以 "," 分隔。可以分多行，但最后⼀行必须以 "," 或 "}" 结尾*/
+/*初始化值以 "," 分隔。可以分多行，但最后一行必须以 "," 或 "}" 结尾*/
 a := []int{
     1,
     2
@@ -684,7 +683,7 @@ switch i {
         println("c")
 }
 
-//如需要继续下⼀分⽀，可使用 fallthrough，但不再判断条件
+//如需要继续下一分⽀，可使用 fallthrough，但不再判断条件
 x := 10
 switch x { 
     case 10:
@@ -772,7 +771,7 @@ switch {
 * 支持命名返回参数。
 * 支持匿名函数和闭包。
 
-使用关键字 **func** 定义函数，**左大括号** 依旧不能另起⼀行
+使用关键字 **func** 定义函数，**左大括号** 依旧不能另起一行
 
 ```go
 // 类型相同的相邻参数可合并。
@@ -782,7 +781,7 @@ func test(x, y int, s string) (int, string) {
 // 多返回值必须用括号。
 }
 
-/*函数是第⼀类对象，可作为参数传递。建议将复杂签名定义为函数类型，以便于阅读*/
+/*函数是第一类对象，可作为参数传递。建议将复杂签名定义为函数类型，以便于阅读*/
 func test(fn func() int) int { 
     return fn()
 }
@@ -810,7 +809,7 @@ func main() {
 
 #### 变参
 
-**变参** 本质上就是 ***slice***。只能有⼀个，且必须是最后⼀个
+**变参** 本质上就是 ***slice***。只能有一个，且必须是最后一个
 
 ```go
 func test(s string, n ...int) string { 
@@ -1007,7 +1006,7 @@ func test() {
 func panic(v interface{}) 
 func recover() interface{}
 
-/*延迟调用中引发的错误，可被后续延迟调用捕获，但仅最后⼀个错误可被捕获*/
+/*延迟调用中引发的错误，可被后续延迟调用捕获，但仅最后一个错误可被捕获*/
 func test() { 
     defer func() { 
         fmt.Println(recover())
@@ -1029,12 +1028,12 @@ func main() {
 
 ```go
 func test() { 
-    defer recover() // ⽆效！ 
-    defer fmt.Println(recover()) // ⽆效！ 
+    defer recover() // 无效！ 
+    defer fmt.Println(recover()) // 无效！ 
     defer func() { 
         func() { 
             println("defer inner") 
-            recover() // ⽆效！ 
+            recover() // 无效！ 
         }()
     }() 
     panic("test panic")
@@ -1140,7 +1139,7 @@ d := [...]struct {
     age uint8 
 }{ 
     {"user1", 10}, // 可省略元素类型
-    {"user2", 20}, // 最后⼀行的逗号
+    {"user2", 20}, // 最后一行的逗号
 }
 
 /*多维数组*/
@@ -1192,7 +1191,7 @@ fmt.Println(s)
 fmt.Println(data)
 //=> [0 1 102 203 4 5]
 
-/*可直接创建 slice 对象，⾃动分配底层数组*/
+/*可直接创建 slice 对象，自动分配底层数组*/
 s1 := []int{0, 1, 2, 3, 8: 100} // 通过初始化表达式构造，可使用索引号。 
 fmt.Println(s1, len(s1), cap(s1)) 
 //=>  [0 1 2 3 0 0 0 0 100] 9 9
@@ -1291,14 +1290,14 @@ fmt.Println(s)
 fmt.Println(s2)
 //=> [0 1 2 100 200]
 
-/*⼀旦超出原 slice.cap 限制，就会重新分配底层数组，即便原数组并未填满*/
+/*一旦超出原 slice.cap 限制，就会重新分配底层数组，即便原数组并未填满*/
 data := [...]int{0, 1, 2, 3, 4, 10: 0} 
 
 s := data[:2:3]
-// ⼀次 append 两个值，超出 s.cap 限制。 
+// 一次 append 两个值，超出 s.cap 限制。 
 s = append(s, 100, 200)
 
- // 重新分配底层数组，与原数组⽆关。
+ // 重新分配底层数组，与原数组无关。
 fmt.Println(s, data) 
 //=> [0 1 100 200] [0 1 2 3 4 0 0 0 0 0 0]
  // 比对底层数组起始指针
@@ -1309,7 +1308,7 @@ fmt.Println(&s[0], &data[0])
 
 #### copy
 
-***函数 copy*** 在两个 slice 间复制数据，**复制长度** 以 **len 小** 的为准。两个 slice 可指向同⼀底层数组，允许元素区间重叠
+***函数 copy*** 在两个 slice 间复制数据，**复制长度** 以 **len 小** 的为准。两个 slice 可指向同一底层数组，允许元素区间重叠
 
 ```go
 data := [...]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -1340,7 +1339,7 @@ m := map[int]struct {
 } 
 println(m[1].name)
 
-/*预先给 make 函数⼀个合理元素数量参数, 有助于提升性能 [避免后续操作时频繁扩张]*/
+/*预先给 make 函数一个合理元素数量参数, 有助于提升性能 [避免后续操作时频繁扩张]*/
 m := make(map[string]int, 1000)
 
 m := map[string]int{
@@ -1356,14 +1355,14 @@ println(m["c"])
 m["b"] = 2  
 // 删除 如果 key 不存在,不会出错
 delete(m, "c")  
-// 获取键值对数量 cap ⽆效
+// 获取键值对数量 cap 无效
 println(len(m)) 
 // 迭代，可仅返回 key。随机顺序返回，每次都不相同 [和 golang 版本实现相关]
 for k, v := range m { 
     println(k, v)
 }
 
-/*从 map 中取回的是⼀个 value 临时复制品，对其成员的修改是没有任何意义的*/
+/*从 map 中取回的是一个 value 临时复制品，对其成员的修改是没有任何意义的*/
 type user struct{ name string } 
 //当 map 因扩张⽽重新哈希时，各键值项存储位置都会发⽣改变
 m := map[int]user{  
@@ -1462,7 +1461,7 @@ func main() {
     set := make(map[string]struct{ }) 
     set["a"] = null
     
-    /*匿名字段 不过是⼀种语法糖，从根本上说，就是⼀个与成员类型同名 (不含包名) 的字段。 被匿名嵌⼊的可以是任何类型，当然也包括 指针*/
+    /*匿名字段 不过是一种语法糖，从根本上说，就是一个与成员类型同名 (不含包名) 的字段。 被匿名嵌⼊的可以是任何类型，当然也包括 指针*/
     type User struct { 
         name string
     } 
@@ -1505,7 +1504,7 @@ func main() {
     } 
     
     type User struct {
-        // Resource.id 与 Classify.id 处于同⼀层次
+        // Resource.id 与 Classify.id 处于同一层次
         Resource 
         Classify
         // 遮蔽 Resource.name
@@ -1527,7 +1526,7 @@ func main() {
     println(u.Classify.id) 
     //=> 100
     
-    /* 不能同时嵌⼊某⼀类型和其指针类型，因为它们名字相同 */
+    /* 不能同时嵌⼊某一类型和其指针类型，因为它们名字相同 */
     type Resource struct { 
         id int 
     } 
@@ -1565,16 +1564,16 @@ func main() {
 
 #### 方法定义
 
-**方法** 总是 ***绑定*** **对象实例**，并 **隐式** 将 **实例** 作为 ***第⼀实参 (receiver)*** 
+**方法** 总是 ***绑定*** **对象实例**，并 **隐式** 将 **实例** 作为 ***第一实参 (receiver)*** 
 
 * 只能为当前 **包内** 命名类型 定义方法
-* 参数 receiver 可任意命名。如方法中未曾使⽤，可省略参数名。 
+* 参数 receiver 可任意命名。如方法中未曾使用，可省略参数名。 
 * 参数 receiver 类型可以是 T 或  \*T。**基类型 T** 不能是 ***接口 或 指针***。 
 * 不支持方法重载，receiver 只是参数签名的组成部分。 
-*  可⽤实例 value 或 pointer 调用全部方法，编译器自动转换。
+*  可用实例 value 或 pointer 调用全部方法，编译器自动转换。
 
 ```go
-/*没有构造和析构方法，通常⽤简单⼯⼚模式返回对象实例*/
+/*没有构造和析构方法，通常用简单工⼚模式返回对象实例*/
 type Queue struct { 
     elements []interface{} 
 } 
@@ -1645,7 +1644,7 @@ func main() {
 #### 匿名字段
 
 ```go
-/*通过匿名字段，可获得和继承类似的复⽤能⼒。依据编译器查找次序，只需在外层定义同 名方法，就可以实现 override */
+/*通过匿名字段，可获得和继承类似的复用能⼒。依据编译器查找次序，只需在外层定义同 名方法，就可以实现 override */
 type User struct { 
     id int
     name string 
@@ -1769,7 +1768,7 @@ func main() {
 
 ### 接口
 
-**接口** 是⼀个或多个 **方法签名的集合**， **任何类型的方法集** 中只要拥有与之对应的 **全部方法**， 就表示它 "实现" 了该接口，无须在该类型上 **显式添加** 接口声明。 
+**接口** 是一个或多个 **方法签名的集合**， **任何类型的方法集** 中只要拥有与之对应的 **全部方法**， 就表示它 "实现" 了该接口，无须在该类型上 **显式添加** 接口声明。 
 所谓 **对应方法**，是指有 **相同名称、参数列表 (不包括参数名) 以及返回值** 。当然，该类型还可以有其他方法；
 
 #### 接口定义
@@ -1806,7 +1805,7 @@ func (self *User) Print() {
 
 func main() { 
     var t Printer = &User{1, "Tom"} 
-    // *User ⽅法集包含 String、Print
+    // *User 方法集包含 String、Print
     t.Print() 
 }
 ```
@@ -1865,7 +1864,7 @@ struct Itab {
     void (*fun[])(void);
 };
 ```
-**接口表** 存储 **元数据信息**，包括 ***接口类型、动态类型，以及实现接口的方法指针*** 无论是 **反射** 还是通过 **接口调⽤** 方法，都会⽤到这些信息。 **数据指针** 持有的是目标对象的 **只读** 复制品，复制完整对象或指针 ;
+**接口表** 存储 **元数据信息**，包括 ***接口类型、动态类型，以及实现接口的方法指针*** 无论是 **反射** 还是通过 **接口调用** 方法，都会用到这些信息。 **数据指针** 持有的是目标对象的 **只读** 复制品，复制完整对象或指针 ;
 
 ```go
 type User struct { 
@@ -1936,7 +1935,7 @@ func main() {
     fmt.Println(u)
 }
 ```
-还可⽤ switch 做 **批量类型** 判断，不支持 **fallthrough**
+还可用 switch 做 **批量类型** 判断，不支持 **fallthrough**
 
 ```go
 func main() { 
@@ -2015,10 +2014,10 @@ func main() {
 
 #### Goroutine
 
-Go 在 **语言层面** 对 **并发编程** 提供支持，⼀种类似 **协程**，称作 **goroutine 机制** ；
-只需在函数调⽤语句前添加 ***go*** 关键字，就可创建 **并发执行单元** ；
+Go 在 **语言层面** 对 **并发编程** 提供支持，一种类似 **协程**，称作 **goroutine 机制** ；
+只需在函数调用语句前添加 ***go*** 关键字，就可创建 **并发执行单元** ；
 调度器会自动动将其安排到合适的系统线程上执行；
-***goroutine*** 是⼀种非常 **轻量级** 的实现，可在单个进程里执行成千上万的并发任务 ；
+***goroutine*** 是一种非常 **轻量级** 的实现，可在单个进程里执行成千上万的并发任务 ；
 
 ```go
     go func() {
@@ -2027,7 +2026,7 @@ Go 在 **语言层面** 对 **并发编程** 提供支持，⼀种类似 **协�
 ```
 **调度器** 不能保证多个 ***goroutine*** 执行 **次序**，且进程退出时不会等待它们 **结束** 。
 **进程** 启动后仅允许 **一个系统线程** 服务于 ***goroutine*** 。
-可使⽤ **环境变量** 或 **标准库** 函数 ***runtime.GOMAXPROCS*** 修改，让 **调度器** 用多个线程实现 **多核并行**，而不仅仅是 **并发** 。
+可使用 **环境变量** 或 **标准库** 函数 ***runtime.GOMAXPROCS*** 修改，让 **调度器** 用多个线程实现 **多核并行**，而不仅仅是 **并发** 。
 
 ```go
 func sum(id int) { 
@@ -2052,7 +2051,7 @@ func main() {
 }
 ```
 
-调⽤ ***runtime.Goexit***  将立即终止当前 ***goroutine*** 执行，**调度器** 确保所有已注册 ***defer 延迟调用*** 被执⾏
+调用 ***runtime.Goexit***  将立即终止当前 ***goroutine*** 执行，**调度器** 确保所有已注册 ***defer 延迟调用*** 被执⾏
 
 ```go
 func main() { 
@@ -2102,7 +2101,7 @@ func main() {
 
 #### Channel
 
-引⽤类型 ***channel*** 是 **CSP 模式** 的具体实现，⽤于多个 ***goroutine*** 通讯。其内部实现了同步，确保并发安全。
+引用类型 ***channel*** 是 **CSP 模式** 的具体实现，用于多个 ***goroutine*** 通讯。其内部实现了同步，确保并发安全。
 
 ```go
 func main() {
@@ -2177,7 +2176,7 @@ var send chan<- int = c
  // receive-only
 var recv <-chan int = c
 
-/*如果需要同时处理多个 channel，可使⽤ select 语句。它随机选择⼀个可⽤ channel 做 收发操作，或执⾏ default case*/
+/*如果需要同时处理多个 channel，可使用 select 语句。它随机选择一个可用 channel 做 收发操作，或执⾏ default case*/
 func main() { 
     a, b := make(chan int, 3), make(chan int)
 
@@ -2201,7 +2200,7 @@ func main() {
 
 
     for i := 0; i < 5; i++ {
-        // 随机选择可⽤ channel 发送数据
+        // 随机选择可用 channel 发送数据
         select { 
            case a <- i: 
            case b <- i: 
@@ -2213,7 +2212,7 @@ func main() {
     select {}
 }
 
-/*⽤简单 ⼯⼚模式 打包并发任务和 channel*/
+/*用简单 工⼚模式 打包并发任务和 channel*/
 func NewTest() chan int {
     c := make(chan int) 
     rand.Seed(time.Now().UnixNano()) 
@@ -2272,7 +2271,7 @@ func main() {
 
             for { 
                 select { 
-                    // closed channel 不会阻塞，因此可⽤作退出通知
+                    // closed channel 不会阻塞，因此可用作退出通知
                     case <-quit: 
                         // 执⾏正常任务
                         return 
@@ -2283,14 +2282,14 @@ func main() {
          }(i)
      }
 
-    // 让测试 goroutine 运⾏⼀会
+    // 让测试 goroutine 运⾏一会
     time.Sleep(time.Second * 5) 
     // 发出退出通知
     close(quit) 
     wg.Wait()
 }
 
-/*⽤ select 实现超时 (timeout) */
+/*用 select 实现超时 (timeout) */
 func main() { 
     w := make(chan bool)
     c := make(chan int, 2) 
@@ -2307,7 +2306,7 @@ func main() {
     <-w 
 }
 
-/*channel 是第⼀类对象，可传参 (内部实现为指针) 或者作为结构成员*/
+/*channel 是第一类对象，可传参 (内部实现为指针) 或者作为结构成员*/
 type Request struct {
      data []int
      ret chan int
