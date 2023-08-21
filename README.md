@@ -133,10 +133,10 @@ import "os/exec" -> /usr/local/go/pkg/darwin_amd64/os/exec.a
 比如对包重命名，以避免同名冲突。
 
 ```go
-import "yuhen/test" // 默认模式: test.A
-import M "yuhen/test" // 包重命名: M.A 
-import . "yuhen/test" // 简便模式: A 
-import _ "yuhen/test" // 非导⼊模式: 仅让该包执⾏初始化函数
+import "github/test" // 默认模式: test.A
+import M "github/test" // 包重命名: M.A 
+import . "github/test" // 简便模式: A 
+import _ "github/test" // 非导⼊模式: 仅让该包执⾏初始化函数
 ```
 
 未使用的导入包，会被编译器视为错误 (不包括 "import \_")。
